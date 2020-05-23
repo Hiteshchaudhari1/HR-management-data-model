@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="HR" id="Project_253df9c" template="Default" database="PostgreSQL" >
+	<schema name="hr" schemaname="hr" >
+		<table name="aspirants" >
+			<comment><![CDATA[for a particular job opening, if internal company employee applies then employee Id column will be filled. 
+for a fresh outsider applicant, employee ID will be blank.]]></comment>
+			<column name="aspirant_id" type="integer" jt="4" mandatory="y" autoincrement="y" />
+			<column name="fisrt_name" type="varchar" length="100" jt="12" />
+			<column name="last_name" type="varchar" length="100" jt="12" />
+			<column name="job_id" type="bigserial" length="100" jt="-5" />
+			<column name="work_experience" type="integer" jt="4" />
+			<column name="status" type="char" length="5" jt="1" />
+			<column name="comments" type="text" jt="12" />
+			<column name="job_location" type="varchar" length="25" jt="12" />
+			<column name="hr_id" type="bigserial" jt="-5" />
+			<column name="date_of_application" type="date" jt="91" />
+			<column name="educational_background" type="text" jt="12" />
+			<column name="employee_id" type="bigserial" jt="-5" />
+			<index name="pk_aspirants_aspirant_id" unique="PRIMARY_KEY" >
+				<column name="aspirant_id" />
+			</index>
+			<index name="idx_aspirants_fisrt_name" unique="NORMAL" >
+				<column name="fisrt_name" />
+			</index>
+			<index name="idx_aspirants_aspirant_id" unique="NORMAL" >
+				<column name="aspirant_id" />
+			</index>
+			<index name="idx_aspirants_last_name" unique="NORMAL" >
+				<column name="last_name" />
+			</index>
+			<index name="idx_aspirants_date_of_application" unique="NORMAL" >
+				<column name="date_of_application" />
+			</index>
+			<fk name="fk_aspirants_employee" to_schema="hr" to_table="employee" >
+				<fk_column name="hr_id" pk="employee_id" />
+			</fk>
+			<fk name="fk_aspirants_job_openings" to_schema="hr" to_table="job_openings" >
+				<fk_column name="job_id" pk="job_id" />
+			</fk>
+			<fk name="fk_aspirants_employee_id" to_schema="hr" to_table="employee" >
+				<fk_column name="employee_id" pk="employee_id" />
+			</fk>
+		</table>
+		<table name="asset_inventory" >
+			<comment><![CDATA[this table will track the whole assets which company currently have in total.]]></comment>
+			<column name="asset_id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="asset_name" type="varchar" length="50" jt="12" />
+			<column name="asset_description" type="varchar" length="100" jt="12" />
+			<column name="asset_insurance_id" type="varchar" length="100" jt="12" />
+			<column name="asset_expiry_date" type="date" jt="91" todo="1" />
+			<index name="pk_employee_eqipment_id" unique="PRIMARY_KEY" >
+				<column name="asset_id" />
+			</index>
+			<index name="idx_asset_inventory_asset_id" unique="NORMAL" >
+				<column name="asset_id" />
+			</index>
+			<index name="idx_asset_inventory_asset_name" unique="NORMAL" >
+				<column name="asset_name" />
+			</index>
+		</table>
+		<table name="asset_inventory_history" >
+			<column name="asset_id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="asset_name" type="varchar" length="50" jt="12" />
+			<column name="asset_description" type="varchar" length="100" jt="12" />
+			<column name="aseet_insurance_id" type="varchar" length="100" jt="12" />
+			<column name="liable_employee_id" type="bigserial" jt="-5" />
+			<column name="returned_date" type="date" jt="91" />
+			<column name="assigned_date" type="date" jt="91" />
+			<column name="hr_approver_id" type="bigserial" jt="-5" />
+			<index name="pk_employee_eqipment_id_0" unique="PRIMARY_KEY" >
+				<column name="asset_id" />
+			</index>
+			<index name="idx_asset_inventory_history_asset_id" unique="NORMAL" >
+				<column name="asset_id" />
+			</index>
+			<index name="idx_asset_inventory_history_asset_name" unique="NORMAL" >
+				<column name="asset_name" />
+			</index>
+		</table>
+		<table name="asset_liability" >
+			<comment><![CDATA[this table will track the issuing of asset to a particulatr employee.]]></comment>
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="asset_id" type="bigserial" jt="-5" />
+			<column name="liable_employee_id" type="bigserial" jt="-5" />
+			<column name="issued_date" type="timestamp" jt="93" />
+			<column name="returned_date" type="timestamp" jt="93" />
+			<column name="approval_status" type="bool" length="1" jt="-7" />
+			<index name="pk_asset_liability_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_asset_liability_liable_employee_id" unique="NORMAL" >
+				<column name="liable_employee_id" />
+			</index>
+			<index name="idx_asset_liability_approval_status" unique="NORMAL" >
+				<column name="approval_status" />
+			</index>
+			<fk name="fk_asset_id" to_schema="hr" to_table="asset_inventory" >
+				<fk_column name="asset_id" pk="asset_id" />
+			</fk>
+			<fk name="fk_asset_liable_employee_id" to_schema="hr" to_table="employee" >
+				<fk_column name="liable_employee_id" pk="employee_id" />
+			</fk>
+		</table>
+		<table name="category" >
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="categoty_name" type="varchar" length="50" jt="12" />
+			<index name="pk_ticekt_category_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="company" >
+			<comment><![CDATA[single organization can have different sub companies like 
+ Volkswagen owns companies like Audi,BentleyPorsche etc.
+each subcompany can have its branches at different locations. to make a table entries unique,  branch_id will be composite key of company_id+Branch_id.]]></comment>
+			<column name="company_id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="branch_id" type="bigserial" jt="-5" />
+			<column name="city" type="varchar" length="25" jt="12" />
+			<column name="country" type="char" length="25" jt="1" />
+			<column name="state" type="char" length="50" jt="1" />
+			<column name="street_number_name" type="varchar" length="50" jt="12" />
+			<column name="postal_code" type="integer" jt="4" />
+			<column name="company_name" type="varchar" length="50" jt="12" />
+			<index name="pk_company_company_id" unique="PRIMARY_KEY" >
+				<column name="company_id" />
+			</index>
+			<index name="compositekey_comanyid_branchid" unique="NORMAL" >
+				<column name="company_id" />
+				<column name="branch_id" />
+			</index>
+			<index name="unq_company_branch_id" unique="UNIQUE" >
+				<column name="branch_id" />
+			</index>
+		</table>
+		<table name="department" >
+			<column name="dept_id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="dept_name" type="varchar" length="50" jt="12" />
+			<column name="employee_id_hod" type="bigserial" jt="-5" />
+			<column name="team_building_budget" type="float8" jt="6" />
+			<index name="pk_department_dept_id" unique="PRIMARY_KEY" >
+				<column name="dept_id" />
+			</index>
+			<index name="idx_department_dept_id" unique="NORMAL" >
+				<column name="dept_id" />
+			</index>
+			<index name="idx_department_dept_id_0" unique="NORMAL" >
+				<column name="dept_id" />
+			</index>
+			<index name="idx_department_dept_name" unique="NORMAL" >
+				<column name="dept_name" />
+			</index>
+			<fk name="fk_department_person" to_schema="hr" to_table="employee" >
+				<fk_column name="employee_id_hod" pk="employee_id" />
+			</fk>
+		</table>
+		<table name="designation" >
+			<column name="designation_id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="designation_name" type="varchar" length="25" jt="12" />
+			<index name="pk_designation_designation_id" unique="PRIMARY_KEY" >
+				<column name="designation_id" />
+			</index>
+			<index name="idx_designation_designation_id" unique="NORMAL" >
+				<column name="designation_id" />
+			</index>
+		</table>
+		<table name="desk_allocation" >
+			<column name="desk_id" type="varchar" jt="12" mandatory="y" />
+			<column name="branch_id" type="bigserial" jt="-5" />
+			<column name="status" type="varchar" length="10" jt="12" />
+			<index name="pk_desk_allocation_desk_id" unique="PRIMARY_KEY" >
+				<column name="desk_id" />
+			</index>
+			<index name="idx_desk_allocation_status" unique="NORMAL" >
+				<column name="status" />
+			</index>
+			<fk name="fk_desk_allocation_company" to_schema="hr" to_table="company" >
+				<fk_column name="branch_id" pk="branch_id" />
+			</fk>
+		</table>
+		<table name="employee" >
+			<comment><![CDATA[1. employee organziational hirarchy will be maintained by self looping to this table using employee_manager_Id and employee_Hr_Id.
+2. annual bonus will be updated in at the end of financial year(or may be if company decide to give bonus half yearly).
+3. on separation, the employee_status will be deactivated. employee data will be soft-deleted to keep the history.]]></comment>
+			<column name="employee_id" type="bigserial" length="50" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="first_name" type="varchar" length="50" jt="12" />
+			<column name="last_name" type="varchar" length="50" jt="12" />
+			<column name="address" type="varchar" length="150" jt="12" />
+			<column name="city" type="varchar" length="25" jt="12" />
+			<column name="country" type="char" length="25" jt="1" />
+			<column name="postal_code" type="integer" jt="4" />
+			<column name="nationality" type="varchar" length="25" jt="12" />
+			<column name="mobile_number" type="integer" jt="4" />
+			<column name="alternate_contact_number" type="integer" jt="4" />
+			<column name="educational_background" type="varchar" length="25" jt="12" />
+			<column name="employee_dob" type="date" jt="91" />
+			<column name="designation_id" type="integer" jt="4" />
+			<column name="work_experience" type="bigserial" jt="-5" todo="2" />
+			<column name="experience_in" type="text" jt="12" />
+			<column name="employee_dept_id" type="bigserial" jt="-5" />
+			<column name="branch_id" type="bigserial" jt="-5" />
+			<column name="desk_id" type="varchar" jt="12" />
+			<column name="payroll_id" type="bigserial" jt="-5" />
+			<column name="no_of_paid_leaves" type="bigserial" jt="-5" />
+			<column name="employee_manager_id" type="bigserial" jt="-5" />
+			<column name="employee_status" type="bool" length="1" jt="-7" />
+			<column name="annual_bonus_amount" type="float8" jt="6" />
+			<column name="date_of_bonous_released" type="date" jt="91" />
+			<column name="bonus_approver_id" type="bigserial" jt="-5" />
+			<column name="employee_hr_id" type="bigserial" jt="-5" />
+			<column name="grade_id" type="bigserial" length="5" jt="-5" todo="2" />
+			<index name="pk_person_id" unique="PRIMARY_KEY" >
+				<column name="employee_id" />
+			</index>
+			<index name="idx_employee_employee_id" unique="NORMAL" >
+				<column name="employee_id" />
+			</index>
+			<index name="idx_employee_employee_id_0" unique="NORMAL" >
+				<column name="employee_id" />
+			</index>
+			<index name="idx_employee_last_name" unique="NORMAL" >
+				<column name="last_name" />
+			</index>
+			<index name="idx_employee_designation_id" unique="NORMAL" >
+				<column name="designation_id" />
+			</index>
+			<index name="idx_employee_employee_dept_id" unique="NORMAL" >
+				<column name="employee_dept_id" />
+			</index>
+			<index name="idx_employee_branch_id" unique="NORMAL" >
+				<column name="branch_id" />
+			</index>
+			<index name="idx_employee_grade_id" unique="NORMAL" >
+				<column name="grade_id" />
+			</index>
+			<fk name="fk_person_department" to_schema="hr" to_table="department" >
+				<fk_column name="employee_dept_id" pk="dept_id" />
+			</fk>
+			<fk name="fk_person_company" to_schema="hr" to_table="company" >
+				<fk_column name="branch_id" pk="branch_id" />
+			</fk>
+			<fk name="fk_employee_desk_allocation" to_schema="hr" to_table="desk_allocation" >
+				<fk_column name="desk_id" pk="desk_id" />
+			</fk>
+			<fk name="fk_employee_designation" to_schema="hr" to_table="designation" >
+				<fk_column name="designation_id" pk="designation_id" />
+			</fk>
+			<fk name="fk_employee_payroll" to_schema="hr" to_table="payroll" >
+				<fk_column name="payroll_id" pk="payroll_id" />
+			</fk>
+			<fk name="fk_employee_salary_increment" to_schema="hr" to_table="salary_increment" >
+				<fk_column name="grade_id" pk="id" />
+			</fk>
+		</table>
+		<table name="employee_attendance" >
+			<comment><![CDATA[working hour will be calculated depending on employees markin and markout timing at the end of the day.
+for public holiday the attendance status will be public holiday and full day working hours will be added for this day.
+calender date would be each day of the year for each employee to track the attendance status for each day whether he worked full day / half day / was on leave or it was a public holiday.
+and his payroll will be calculated salary per hr - every month based on working hours]]></comment>
+			<column name="id" type="integer" jt="4" mandatory="y" autoincrement="y" />
+			<column name="employee_id" type="bigserial" jt="-5" />
+			<column name="mark_in_time" type="timestamp" jt="93" />
+			<column name="mark_out_time" type="timestamp" jt="93" />
+			<column name="employee_type_id" type="bigserial" jt="-5" />
+			<column name="attendance_status" type="varchar" length="1" jt="12" />
+			<column name="working_hrs" type="integer" jt="4" todo="2" />
+			<column name="leave_type_id" type="bigserial" jt="-5" />
+			<column name="calender_date" type="date" jt="91" />
+			<index name="pk_employee_attendance_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_employee_attendance_employee_id" unique="NORMAL" >
+				<column name="employee_id" />
+			</index>
+			<index name="idx_employee_attendance_mark_in_time" unique="NORMAL" >
+				<column name="mark_in_time" />
+			</index>
+			<index name="idx_employee_attendance_mark_out_time" unique="NORMAL" >
+				<column name="mark_out_time" />
+			</index>
+			<index name="idx_employee_attendance_attendance_status" unique="NORMAL" >
+				<column name="attendance_status" />
+			</index>
+			<index name="idx_employee_attendance_working_hrs" unique="NORMAL" >
+				<column name="working_hrs" />
+			</index>
+			<index name="idx_employee_attendance_calender_date" unique="NORMAL" >
+				<column name="calender_date" />
+			</index>
+			<fk name="fk_employee_attendance" to_schema="hr" to_table="employee" >
+				<fk_column name="employee_id" pk="employee_id" />
+			</fk>
+			<fk name="fk_leave_type_id" to_schema="hr" to_table="leave_type" >
+				<fk_column name="leave_type_id" pk="id" />
+			</fk>
+		</table>
+		<table name="employee_history" >
+			<column name="employee_id" type="bigserial" length="50" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="first_name" type="varchar" length="50" jt="12" />
+			<column name="last_name" type="varchar" length="50" jt="12" />
+			<column name="address" type="varchar" length="150" jt="12" />
+			<column name="city" type="varchar" length="25" jt="12" />
+			<column name="country" type="char" length="25" jt="1" />
+			<column name="postal_code" type="integer" jt="4" />
+			<column name="mobile_number" type="integer" jt="4" />
+			<column name="alternate_contact_number" type="integer" jt="4" />
+			<column name="educational_background" type="varchar" length="25" jt="12" />
+			<column name="designation_id" type="integer" jt="4" />
+			<column name="work_experience" type="bigserial" jt="-5" />
+			<column name="experience_in" type="text" jt="12" />
+			<column name="employee_dept_id" type="bigserial" jt="-5" />
+			<column name="branch_id" type="bigserial" jt="-5" />
+			<column name="nationality" type="varchar" length="25" jt="12" />
+			<column name="desk_id" type="varchar" jt="12" />
+			<column name="payroll_id" type="bigserial" jt="-5" />
+			<column name="no_of_paid_leaves" type="bigserial" jt="-5" />
+			<column name="employee_manager_id" type="bigserial" jt="-5" />
+			<column name="employee_status" type="bool" length="1" jt="-7" />
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="payslip" type="varchar" length="100" jt="12" />
+			<column name="employee_hr_id" type="bigserial" jt="-5" />
+			<index name="pk_employee_history_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_employee_history_employee_id" unique="UNIQUE" >
+				<column name="employee_id" />
+			</index>
+			<index name="idx_employee_history_first_name" unique="NORMAL" >
+				<column name="first_name" />
+			</index>
+			<index name="idx_employee_history_last_name" unique="NORMAL" >
+				<column name="last_name" />
+			</index>
+		</table>
+		<table name="employee_reimbursement" >
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="employee_id" type="bigserial" jt="-5" />
+			<column name="reimbursement_amount" type="float8" jt="6" />
+			<column name="reimbursement_description" type="varchar" length="50" jt="12" />
+			<column name="reimbursement_date" type="date" jt="91" />
+			<column name="category_id" type="bigserial" jt="-5" />
+			<column name="approval_status" type="char" length="1" jt="1" />
+			<index name="pk_employee_bonus_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_employee_bonus_reimbursement_employee_id" unique="NORMAL" >
+				<column name="employee_id" />
+			</index>
+			<fk name="fk_employee_id" to_schema="hr" to_table="employee" >
+				<fk_column name="employee_id" pk="employee_id" />
+			</fk>
+			<fk name="fk_category_id" to_schema="hr" to_table="category" >
+				<fk_column name="category_id" pk="id" />
+			</fk>
+		</table>
+		<table name="employee_salary_history" >
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="payslip" type="varchar" length="250" jt="12" />
+			<column name="increment_history" type="float8" jt="6" />
+			<column name="grade" type="varchar" length="5" jt="12" />
+			<column name="increment_year" type="date" jt="91" />
+			<column name="employee_id" type="bigserial" jt="-5" />
+			<index name="pk_employee_payroll_hostory_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_employee_salary_history_payslip" unique="NORMAL" >
+				<column name="payslip" />
+			</index>
+			<index name="idx_employee_salary_history_employee_id" unique="NORMAL" >
+				<column name="employee_id" />
+			</index>
+			<fk name="fk_employee_id_history" to_schema="hr" to_table="employee_history" >
+				<fk_column name="employee_id" pk="employee_id" />
+			</fk>
+		</table>
+		<table name="employee_type" >
+			<comment><![CDATA[employee types would be : 
+internal employees,
+consultant employees,
+internship/thesis employees,
+External employees etc.]]></comment>
+			<column name="emp_type_id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="employee_type_name" type="varchar" length="100" jt="12" />
+			<column name="emp_type_description" type="text" jt="12" />
+			<index name="pk_employee_type_emp_type_id" unique="PRIMARY_KEY" >
+				<column name="emp_type_id" />
+			</index>
+		</table>
+		<table name="employee_type_mapping" >
+			<comment><![CDATA[To identify the relationship of the external employees with their respective companies.]]></comment>
+			<column name="emp_type_id" type="bigserial" length="50" jt="-5" />
+			<column name="description" type="varchar" length="50" jt="12" />
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="consulting_comapny_id" type="bigserial" length="50" jt="-5" />
+			<column name="contract_duration" type="varchar" length="50" jt="12" />
+			<column name="designation_id" type="bigserial" jt="-5" />
+			<column name="employee_id" type="bigint" jt="-5" />
+			<index name="pk_employee_type_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_employee_type_designation" to_schema="hr" to_table="designation" >
+				<fk_column name="designation_id" pk="designation_id" />
+			</fk>
+			<fk name="fk_employee_type" to_schema="hr" to_table="external_company_contract" >
+				<fk_column name="consulting_comapny_id" pk="contract_with" />
+			</fk>
+			<fk name="fk_employee_type_employee" to_schema="hr" to_table="employee" >
+				<fk_column name="employee_id" pk="employee_id" />
+			</fk>
+			<fk name="fk_employee_type_mapping" to_schema="hr" to_table="employee_type" >
+				<fk_column name="emp_type_id" pk="emp_type_id" />
+			</fk>
+		</table>
+		<table name="external_company_contract" >
+			<comment><![CDATA[any contract with outside company for the purpose of software purchase agreement or man power will be recorded in this table.]]></comment>
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="company_name" type="varchar" length="50" jt="12" />
+			<column name="company_location" type="varchar" length="50" jt="12" />
+			<column name="contract_duration" type="float8" jt="6" />
+			<column name="number_of_consultants" type="integer" jt="4" />
+			<column name="contract_amount" type="float8" jt="6" />
+			<column name="contract_with" type="bigserial" jt="-5" />
+			<index name="pk_external_company_contract_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_external_company_contract_contract_with" unique="UNIQUE" >
+				<column name="contract_with" />
+			</index>
+			<fk name="fk_external_company_contract" to_schema="hr" to_table="company" >
+				<fk_column name="contract_with" pk="branch_id" />
+			</fk>
+		</table>
+		<table name="external_company_contract_history" >
+			<column name="id" type="bigserial" jt="-5" mandatory="y" />
+			<column name="company_name" type="varchar" length="50" jt="12" />
+			<column name="company_location" type="varchar" length="50" jt="12" />
+			<column name="contract_duration" type="float8" jt="6" />
+			<column name="number_of_consultants" type="integer" jt="4" />
+			<column name="contract_amount" type="float8" jt="6" />
+			<column name="contract_with" type="bigserial" jt="-5" />
+			<column name="history_id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<index name="pk_external_company_contract_history_history_id" unique="PRIMARY_KEY" >
+				<column name="history_id" />
+			</index>
+		</table>
+		<table name="job_openings" >
+			<column name="job_id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="job_position" type="varchar" jt="12" />
+			<column name="job_description" type="text" jt="12" />
+			<column name="is_active" type="bool" length="1" jt="-7" />
+			<column name="no_of_employee_required" type="integer" jt="4" />
+			<column name="required_work_experience" type="text" jt="12" />
+			<column name="skill_set" type="text" jt="12" />
+			<index name="pk_job_openings_job_id" unique="PRIMARY_KEY" >
+				<column name="job_id" />
+			</index>
+			<index name="idx_job_openings_job_id" unique="NORMAL" >
+				<column name="job_id" />
+			</index>
+		</table>
+		<table name="leave_request" >
+			<comment><![CDATA[could be a leave or a comp-off request.
+comp-off : 
+considering an employee works on a holiday then he/she can apply for comp-off leave which will go to manager for approval and on approval by manager, his paid leaves will be credited.]]></comment>
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="employee_id" type="bigserial" jt="-5" />
+			<column name="from_date" type="date" jt="91" />
+			<column name="to_date" type="date" jt="91" />
+			<column name="leave_type_id" type="bigserial" jt="-5" />
+			<column name="comments" type="text" jt="12" />
+			<column name="leave_approval_status" type="bool" length="1" jt="-7" />
+			<index name="pk_leave_request_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_employee_id" to_schema="hr" to_table="employee" >
+				<fk_column name="employee_id" pk="employee_id" />
+			</fk>
+			<fk name="fk_leave_type_id" to_schema="hr" to_table="leave_type" >
+				<fk_column name="leave_type_id" pk="id" />
+			</fk>
+		</table>
+		<table name="leave_type" >
+			<comment><![CDATA[leave types would be :
+for eg. paid leaves, sick leaves, comp-off.]]></comment>
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="type_of_leave" type="varchar" length="25" jt="12" />
+			<column name="leave_description" type="varchar" length="50" jt="12" />
+			<column name="no_of_leaves" type="integer" jt="4" />
+			<index name="pk_leave_type_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_leave_type_id" unique="NORMAL" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="payroll" >
+			<column name="payroll_id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="dept_id" type="bigserial" jt="-5" />
+			<column name="salary_per_hr" type="float8" jt="6" />
+			<index name="pk_payroll_id" unique="PRIMARY_KEY" >
+				<column name="payroll_id" />
+			</index>
+			<index name="idx_payroll_payroll_id" unique="NORMAL" >
+				<column name="payroll_id" />
+			</index>
+			<fk name="fk_payroll_department" to_schema="hr" to_table="department" >
+				<fk_column name="dept_id" pk="dept_id" />
+			</fk>
+			<fk name="fk_payroll_company" to_schema="hr" to_table="company" >
+				<fk_column name="payroll_id" pk="company_id" />
+			</fk>
+		</table>
+		<table name="public_holiday" >
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="date_of_holiday" type="date" jt="91" />
+			<column name="occasion" type="varchar" length="25" jt="12" />
+			<column name="company_state" type="varchar" jt="12" />
+			<index name="pk_public_holiday_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="salary_increment" >
+			<comment><![CDATA[it will be a master table where data would be like :
+Grade A -- 30%,
+Grade B -- 20%,
+Grade C -- 5%
+and indivisual employee will get a grade in employee tatble and his yearly increment will be done as per his grade and % increment decided for that grade by organziational management.]]></comment>
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="grade" type="varchar" length="5" jt="12" />
+			<column name="%increment" type="float8" jt="6" />
+			<index name="pk_person_salary_increment_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="ticket" >
+			<comment><![CDATA[approval by is an optional field.
+For E.g :
+if employee needs any paid software to use for project purpose then first request needs to be approved by his manager.]]></comment>
+			<column name="id" type="bigserial" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="assigned_to_employee_id" type="bigserial" jt="-5" />
+			<column name="raised_by_employee_id" type="bigserial" jt="-5" />
+			<column name="ticket_description" type="bigserial" jt="-5" />
+			<column name="ticket_status" type="bool" length="1" jt="-7" />
+			<column name="ticket_tat" type="date" jt="91" todo="1" />
+			<column name="ticket_approval_status" type="bool" length="1" jt="-7" />
+			<column name="approval_by" type="varchar" length="100" jt="12" />
+			<index name="pk_ticket_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_ticket_id" unique="NORMAL" >
+				<column name="id" />
+			</index>
+			<index name="idx_ticket_ticket_status" unique="NORMAL" >
+				<column name="ticket_status" />
+			</index>
+			<index name="idx_ticket_assigned_to_employee_id" unique="NORMAL" >
+				<column name="assigned_to_employee_id" />
+			</index>
+			<index name="idx_ticket_raised_by_employee_id" unique="NORMAL" >
+				<column name="raised_by_employee_id" />
+			</index>
+			<fk name="fk_assigned_to_employee_id" to_schema="hr" to_table="employee" >
+				<fk_column name="assigned_to_employee_id" pk="employee_id" />
+			</fk>
+			<fk name="fk_raised_by_employee_id" to_schema="hr" to_table="employee" >
+				<fk_column name="raised_by_employee_id" pk="employee_id" />
+			</fk>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout_11f828e" show_relation="columns" >
+		<comment><![CDATA[Default Layout]]></comment>
+		<entity schema="hr" name="desk_allocation" color="996699" x="720" y="48" />
+		<entity schema="hr" name="job_openings" color="996600" x="736" y="400" />
+		<entity schema="hr" name="designation" color="4D804D" x="512" y="288" />
+		<entity schema="hr" name="public_holiday" color="CCFFCC" x="880" y="224" />
+		<entity schema="hr" name="external_company_contract" color="996699" x="848" y="48" />
+		<entity schema="hr" name="company" color="996699" x="496" y="48" />
+		<entity schema="hr" name="salary_increment" color="4D66CC" x="368" y="752" />
+		<entity schema="hr" name="department" color="996699" x="336" y="448" />
+		<entity schema="hr" name="asset_liability" color="FF0000" x="544" y="864" />
+		<entity schema="hr" name="employee_type" color="4D804D" x="1168" y="400" />
+		<entity schema="hr" name="leave_type" color="CCFFCC" x="704" y="208" />
+		<entity schema="hr" name="leave_request" color="CCFFCC" x="960" y="400" />
+		<entity schema="hr" name="employee_history" color="003333" x="960" y="576" />
+		<entity schema="hr" name="aspirants" color="996600" x="512" y="384" />
+		<entity schema="hr" name="external_company_contract_history" color="003333" x="1168" y="512" />
+		<entity schema="hr" name="employee_type_mapping" color="4D804D" x="1088" y="112" />
+		<entity schema="hr" name="payroll" color="4D66CC" x="128" y="848" />
+		<entity schema="hr" name="employee_attendance" color="4D804D" x="320" y="96" />
+		<entity schema="hr" name="employee" color="4D804D" x="48" y="64" />
+		<entity schema="hr" name="asset_inventory" color="FF0000" x="528" y="672" />
+		<entity schema="hr" name="ticket" color="808000" x="768" y="640" />
+		<entity schema="hr" name="category" color="4D66CC" x="352" y="576" />
+		<entity schema="hr" name="employee_salary_history" color="003333" x="1248" y="704" />
+		<entity schema="hr" name="asset_inventory_history" color="003333" x="1248" y="864" />
+		<entity schema="hr" name="employee_reimbursement" color="4D66CC" x="128" y="640" />
+	</layout>
+</project>
